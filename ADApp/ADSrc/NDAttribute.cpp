@@ -363,25 +363,34 @@ int NDAttribute::getValue(NDAttrDataType_t dataType, void *pValue, size_t dataSi
   switch (dataType) {
     case NDAttrInt8:
       return getValueT<epicsInt8>(pValue, dataSize);
+      break;
     case NDAttrUInt8:
       return getValueT<epicsUInt8>(pValue, dataSize);
+      break;
     case NDAttrInt16:
       return getValueT<epicsInt16>(pValue, dataSize);
       break;
     case NDAttrUInt16:
       return getValueT<epicsUInt16>(pValue, dataSize);
+      break;
     case NDAttrInt32:
       return getValueT<epicsInt32>(pValue, dataSize);
+      break;
     case NDAttrUInt32:
       return getValueT<epicsUInt32>(pValue, dataSize);
+      break;
     case NDAttrInt64:
       return getValueT<epicsInt64>(pValue, dataSize);
+      break;
     case NDAttrUInt64:
       return getValueT<epicsUInt64>(pValue, dataSize);
+      break;
     case NDAttrFloat32:
       return getValueT<epicsFloat32>(pValue, dataSize);
+      break;
     case NDAttrFloat64:
       return getValueT<epicsFloat64>(pValue, dataSize);
+      break;
     default:
       return ND_ERROR;
   }
