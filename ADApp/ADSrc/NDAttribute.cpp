@@ -138,7 +138,7 @@ int NDAttribute::setDataType(NDAttrDataType_t type)
     fprintf(stderr, "NDAttribute::setDataType, data type already defined = %d\n", this->dataType_);
     return ND_ERROR;
   }
-  if ((type < NDAttrInt8) || (type > NDAttrString)) {
+  if ((type < NDAttrInt8) || (type > NDAttrVecFloat64)) {
     fprintf(stderr, "NDAttribute::setDataType, invalid data type = %d\n", type);
     return ND_ERROR;
   }
@@ -223,6 +223,36 @@ int NDAttribute::setValue(const void *pValue)
       break;
     case NDAttrFloat64:
       this->value_.f64 = *(epicsFloat64 *)pValue;
+    break;
+    case NDAttrVecInt8:
+      this->vector_.i8 = *(std::vector<epicsInt8> *)pValue;
+      break;
+    case NDAttrVecUInt8:
+      this->vector_.ui8 = *(std::vector<epicsUInt8> *)pValue;
+      break;
+    case NDAttrVecInt16:
+      this->vector_.i16 = *(std::vector<epicsInt16> *)pValue;
+      break;
+    case NDAttrVecUInt16:
+      this->vector_.ui16 = *(std::vector<epicsUInt16> *)pValue;
+      break;
+    case NDAttrVecInt32:
+      this->vector_.i32 = *(std::vector<epicsInt32> *)pValue;
+      break;
+    case NDAttrVecUInt32:
+      this->vector_.ui32 = *(std::vector<epicsUInt32> *)pValue;
+      break;
+    case NDAttrVecInt64:
+      this->vector_.i64 = *(std::vector<epicsInt64> *)pValue;
+      break;
+    case NDAttrVecUInt64:
+      this->vector_.ui64 = *(std::vector<epicsUInt64> *)pValue;
+      break;
+    case NDAttrVecFloat32:
+      this->vector_.f32 = *(std::vector<epicsFloat32> *)pValue;
+      break;
+    case NDAttrVecFloat64:
+      this->vector_.f64 = *(std::vector<epicsFloat64> *)pValue;
       break;
     case NDAttrUndefined:
       break;
@@ -240,6 +270,126 @@ int NDAttribute::setValue(const std::string& value)
   /* Data type must be string */
   if (dataType_ == NDAttrString) {
     this->string_ = value;
+    return ND_SUCCESS;
+  }
+  return ND_ERROR;
+}
+
+/** Sets the value for this attribute.
+  * \param[in] value value of this attribute. */
+int NDAttribute::setValue(std::vector<epicsInt8>& value)
+{
+  /* Data type must be correct vector*/
+  if (dataType_ == NDAttrVecInt8) {
+    this->vector_.i8 = value;
+    return ND_SUCCESS;
+  }
+  return ND_ERROR;
+}
+
+/** Sets the value for this attribute.
+  * \param[in] value value of this attribute. */
+int NDAttribute::setValue(std::vector<epicsUInt8>& value)
+{
+  /* Data type must be correct vector*/
+  if (dataType_ == NDAttrVecUInt8) {
+    this->vector_.ui8 = value;
+    return ND_SUCCESS;
+  }
+  return ND_ERROR;
+}
+
+/** Sets the value for this attribute.
+  * \param[in] value value of this attribute. */
+int NDAttribute::setValue(std::vector<epicsInt16>& value)
+{
+  /* Data type must be correct vector*/
+  if (dataType_ == NDAttrVecInt16) {
+    this->vector_.i16 = value;
+    return ND_SUCCESS;
+  }
+  return ND_ERROR;
+}
+
+/** Sets the value for this attribute.
+  * \param[in] value value of this attribute. */
+int NDAttribute::setValue(std::vector<epicsUInt16>& value)
+{
+  /* Data type must be correct vector*/
+  if (dataType_ == NDAttrVecUInt16) {
+    this->vector_.ui16 = value;
+    return ND_SUCCESS;
+  }
+  return ND_ERROR;
+}
+
+/** Sets the value for this attribute.
+  * \param[in] value value of this attribute. */
+int NDAttribute::setValue(std::vector<epicsInt32>& value)
+{
+  /* Data type must be correct vector*/
+  if (dataType_ == NDAttrVecInt32) {
+    this->vector_.i32 = value;
+    return ND_SUCCESS;
+  }
+  return ND_ERROR;
+}
+
+/** Sets the value for this attribute.
+  * \param[in] value value of this attribute. */
+int NDAttribute::setValue(std::vector<epicsUInt32>& value)
+{
+  /* Data type must be correct vector*/
+  if (dataType_ == NDAttrVecUInt32) {
+    this->vector_.ui32 = value;
+    return ND_SUCCESS;
+  }
+  return ND_ERROR;
+}
+
+/** Sets the value for this attribute.
+  * \param[in] value value of this attribute. */
+int NDAttribute::setValue(std::vector<epicsInt64>& value)
+{
+  /* Data type must be correct vector*/
+  if (dataType_ == NDAttrVecInt64) {
+    this->vector_.i64 = value;
+    return ND_SUCCESS;
+  }
+  return ND_ERROR;
+}
+
+/** Sets the value for this attribute.
+  * \param[in] value value of this attribute. */
+int NDAttribute::setValue(std::vector<epicsUInt64>& value)
+{
+  /* Data type must be correct vector*/
+  if (dataType_ == NDAttrVecUInt64) {
+    this->vector_.ui64 = value;
+    return ND_SUCCESS;
+  }
+  return ND_ERROR;
+}
+
+/** Sets the value for this attribute.
+  * \param[in] value value of this attribute. */
+int NDAttribute::setValue(std::vector<epicsFloat32>& value)
+{
+  /* Data type must be correct vector*/
+  if (dataType_ == NDAttrVecFloat32) {
+    this->vector_.f32 = value;
+    return ND_SUCCESS;
+  }
+  return ND_ERROR;
+}
+
+/** Sets the value for this attribute.
+  * \param[in] value value of this attribute. */
+int NDAttribute::setValue(std::vector<epicsFloat64>& value)
+{
+  /* Data type must be correct vector*/
+  if (dataType_ == NDAttrVecFloat64) {
+    this->vector_.f64 = value;
     return ND_SUCCESS;
   }
   return ND_ERROR;
@@ -283,6 +433,36 @@ int NDAttribute::getValueInfo(NDAttrDataType_t *pDataType, size_t *pSize)
       break;
     case NDAttrFloat64:
       *pSize = sizeof(this->value_.f64);
+      break;
+    case NDAttrVecInt8:
+      *pSize = this->vector_.i8.size() * sizeof(epicsInt8);
+      break;
+    case NDAttrVecUInt8:
+      *pSize = this->vector_.ui8.size() * sizeof(epicsUInt8);
+      break;
+    case NDAttrVecInt16:
+      *pSize = this->vector_.i16.size() * sizeof(epicsInt16);
+      break;
+    case NDAttrVecUInt16:
+      *pSize = this->vector_.ui16.size() * sizeof(epicsUInt16);
+      break;
+    case NDAttrVecInt32:
+      *pSize = this->vector_.i32.size() * sizeof(epicsInt32);
+      break;
+    case NDAttrVecUInt32:
+      *pSize = this->vector_.ui32.size() * sizeof(epicsUInt32);
+      break;
+    case NDAttrVecInt64:
+      *pSize = this->vector_.i64.size() * sizeof(epicsInt16);
+      break;
+    case NDAttrVecUInt64:
+      *pSize = this->vector_.ui64.size() * sizeof(epicsUInt16);
+      break;
+    case NDAttrVecFloat32:
+      *pSize = this->vector_.f32.size() * sizeof(epicsFloat32);
+      break;
+    case NDAttrVecFloat64:
+      *pSize = this->vector_.f64.size() * sizeof(epicsFloat64);
       break;
     case NDAttrString:
       *pSize = this->string_.size()+1;
@@ -348,12 +528,52 @@ int NDAttribute::getValueT(void *pValueIn, size_t dataSize)
   * Does data type conversions between numeric data types */
 int NDAttribute::getValue(NDAttrDataType_t dataType, void *pValue, size_t dataSize)
 {
+  if (this->dataType_ != dataType) return ND_ERROR;
   switch (this->dataType_) {
     case NDAttrString:
-      if (dataType != NDAttrString) return ND_ERROR;
       if (dataSize == 0) dataSize = this->string_.size()+1;
       strncpy((char *)pValue, this->string_.c_str(), dataSize);
       return ND_SUCCESS;
+    case NDAttrVecInt8:
+      if (dataSize == 0) dataSize = this->vector_.i8.size() * sizeof(epicsInt8);
+      memcpy((epicsInt8*)pValue, this->vector_.i8.data(), dataSize);
+      break;
+    case NDAttrVecUInt8:
+      if (dataSize == 0) dataSize = this->vector_.ui8.size() * sizeof(epicsUInt8);
+      memcpy((epicsUInt8*)pValue, this->vector_.ui8.data(), dataSize);
+      break;
+    case NDAttrVecInt16:
+      if (dataSize == 0) dataSize = this->vector_.i16.size() * sizeof(epicsInt16);
+      memcpy((epicsInt16*)pValue, this->vector_.i16.data(), dataSize);
+      break;
+    case NDAttrVecUInt16:
+      if (dataSize == 0) dataSize = this->vector_.ui16.size() * sizeof(epicsUInt16);
+      memcpy((epicsUInt16*)pValue, this->vector_.ui16.data(), dataSize);
+      break;
+    case NDAttrVecInt32:
+      if (dataSize == 0) dataSize = this->vector_.i32.size() * sizeof(epicsInt32);
+      memcpy((epicsInt32*)pValue, this->vector_.i32.data(), dataSize);
+      break;
+    case NDAttrVecUInt32:
+      if (dataSize == 0) dataSize = this->vector_.ui32.size() * sizeof(epicsUInt32);
+      memcpy((epicsUInt32*)pValue, this->vector_.ui32.data(), dataSize);
+      break;
+    case NDAttrVecInt64:
+      if (dataSize == 0) dataSize = this->vector_.i64.size() * sizeof(epicsInt64);
+      memcpy((epicsInt64*)pValue, this->vector_.i64.data(), dataSize);
+      break;
+    case NDAttrVecUInt64:
+      if (dataSize == 0) dataSize = this->vector_.ui64.size() * sizeof(epicsUInt64);
+      memcpy((epicsUInt64*)pValue, this->vector_.ui64.data(), dataSize);
+      break;
+    case NDAttrVecFloat32:
+      if (dataSize == 0) dataSize = this->vector_.f32.size() * sizeof(epicsFloat32);
+      memcpy((epicsFloat32*)pValue, this->vector_.f32.data(), dataSize);
+      break;
+    case NDAttrVecFloat64:
+      if (dataSize == 0) dataSize = this->vector_.f64.size() * sizeof(epicsFloat64);
+      memcpy((epicsFloat64*)pValue, this->vector_.f64.data(), dataSize);
+      break;
     case NDAttrUndefined:
       return ND_ERROR;
     default:
@@ -406,6 +626,101 @@ int NDAttribute::getValue(std::string& value)
   switch (this->dataType_) {
     case NDAttrString:
       value = this->string_;
+      return ND_SUCCESS;
+    default:
+      return ND_ERROR;
+  }
+}
+
+/** Returns the value of an NDAttrString attribute as an std::string.
+  * \param[out] value Location to return the value.
+  *
+  * Does data type conversions between numeric data types */
+int NDAttribute::getValue(std::vector<epicsInt8>& value){
+  switch (this->dataType_) {
+    case NDAttrVecInt8:
+      value = this->vector_.i8;
+      return ND_SUCCESS;
+    default:
+      return ND_ERROR;
+  }
+}
+int NDAttribute::getValue(std::vector<epicsUInt8>& value){
+  switch (this->dataType_) {
+    case NDAttrVecUInt8:
+      value = this->vector_.ui8;
+      return ND_SUCCESS;
+    default:
+      return ND_ERROR;
+  }
+}
+int NDAttribute::getValue(std::vector<epicsInt16>& value){
+  switch (this->dataType_) {
+    case NDAttrVecInt16:
+      value = this->vector_.i16;
+      return ND_SUCCESS;
+    default:
+      return ND_ERROR;
+  }
+}
+int NDAttribute::getValue(std::vector<epicsUInt16>& value){
+  switch (this->dataType_) {
+    case NDAttrVecUInt16:
+      value = this->vector_.ui16;
+      return ND_SUCCESS;
+    default:
+      return ND_ERROR;
+  }
+}
+int NDAttribute::getValue(std::vector<epicsInt32>& value){
+  switch (this->dataType_) {
+    case NDAttrVecInt32:
+      value = this->vector_.i32;
+      return ND_SUCCESS;
+    default:
+      return ND_ERROR;
+  }
+}
+int NDAttribute::getValue(std::vector<epicsUInt32>& value){
+  switch (this->dataType_) {
+    case NDAttrVecUInt32:
+      value = this->vector_.ui32;
+      return ND_SUCCESS;
+    default:
+      return ND_ERROR;
+  }
+}
+int NDAttribute::getValue(std::vector<epicsInt64>& value){
+  switch (this->dataType_) {
+    case NDAttrVecInt64:
+      value = this->vector_.i64;
+      return ND_SUCCESS;
+    default:
+      return ND_ERROR;
+  }
+}
+int NDAttribute::getValue(std::vector<epicsUInt64>& value){
+  switch (this->dataType_) {
+    case NDAttrVecUInt64:
+      value = this->vector_.ui64;
+      return ND_SUCCESS;
+    default:
+      return ND_ERROR;
+  }
+}
+int NDAttribute::getValue(std::vector<epicsFloat32>& value){
+  switch (this->dataType_) {
+    case NDAttrVecFloat32:
+      value = this->vector_.f32;
+      return ND_SUCCESS;
+    default:
+      return ND_ERROR;
+  }
+}
+int NDAttribute::getValue(std::vector<epicsFloat64>& value){
+  switch (this->dataType_) {
+    case NDAttrVecFloat64:
+      value = this->vector_.f64;
       return ND_SUCCESS;
     default:
       return ND_ERROR;
@@ -475,6 +790,46 @@ int NDAttribute::report(FILE *fp, int details)
     case NDAttrFloat64:
       fprintf(fp, "  dataType=NDAttrFloat64\n");
       fprintf(fp, "  value=%f\n", this->value_.f64);
+      break;
+    case NDAttrVecInt8:
+      fprintf(fp, "  dataType=NDAttrVecInt8\n");
+      fprintf(fp, "  value of first element=%d\n", this->vector_.i8[0]);
+      break;
+    case NDAttrVecUInt8:
+      fprintf(fp, "  dataType=NDAttrVecUInt8\n");
+      fprintf(fp, "  value of first element=%u\n", this->vector_.ui8[0]);
+      break;
+    case NDAttrVecInt16:
+      fprintf(fp, "  dataType=NDAttrVecInt16\n");
+      fprintf(fp, "  value of first element=%d\n", this->vector_.i16[0]);
+      break;
+    case NDAttrVecUInt16:
+      fprintf(fp, "  dataType=NDAttrVecUInt16\n");
+      fprintf(fp, "  value of first element=%d\n", this->vector_.ui16[0]);
+      break;
+    case NDAttrVecInt32:
+      fprintf(fp, "  dataType=NDAttrVecInt32\n");
+      fprintf(fp, "  value of first element=%d\n", this->vector_.i32[0]);
+      break;
+    case NDAttrVecUInt32:
+      fprintf(fp, "  dataType=NDAttrVecUInt32\n");
+      fprintf(fp, "  value of first element=%d\n", this->vector_.ui32[0]);
+      break;
+    case NDAttrVecInt64:
+      fprintf(fp, "  dataType=NDAttrVecInt64\n");
+      fprintf(fp, "  value of first element=%lld\n", this->vector_.i64[0]);
+      break;
+    case NDAttrVecUInt64:
+      fprintf(fp, "  dataType=NDAttrVecUInt64\n");
+      fprintf(fp, "  value of first element=%llu\n", this->vector_.ui64[0]);
+      break;
+    case NDAttrVecFloat32:
+      fprintf(fp, "  dataType=NDAttrVecFloat32\n");
+      fprintf(fp, "  value of first element=%f\n", this->vector_.f32[0]);
+      break;
+    case NDAttrVecFloat64:
+      fprintf(fp, "  dataType=NDAttrVecFloat64\n");
+      fprintf(fp, "  value of first element=%f\n", this->vector_.f64[0]);
       break;
     case NDAttrString:
       fprintf(fp, "  dataType=NDAttrString\n");

@@ -10,6 +10,7 @@
 #define NDAttribute_H
 
 #include <string>
+#include <vector>
 #include <stdio.h>
 
 #include <ellLib.h>
@@ -54,6 +55,16 @@ typedef enum
     NDAttrFloat32 = NDFloat32,  /**< 32-bit float */
     NDAttrFloat64 = NDFloat64,  /**< 64-bit float */
     NDAttrString,               /**< Dynamic length string */
+    NDAttrVecInt8,              /**< Signed 8-bit integer */
+    NDAttrVecUInt8,             /**< Unsigned 8-bit integer */
+    NDAttrVecInt16,             /**< Signed 16-bit integer */
+    NDAttrVecUInt16,            /**< Unsigned 16-bit integer */
+    NDAttrVecInt32,             /**< Signed 32-bit integer */
+    NDAttrVecUInt32,            /**< Unsigned 32-bit integer */
+    NDAttrVecInt64,             /**< Signed 64-bit integer */
+    NDAttrVecUInt64,            /**< Unsigned 64-bit integer */
+    NDAttrVecFloat32,           /**< 32-bit float */
+    NDAttrVecFloat64,           /**< 64-bit float */
     NDAttrUndefined             /**< Undefined data type */
 } NDAttrDataType_t;
 
@@ -81,6 +92,23 @@ typedef union {
     epicsFloat32 f32;   /**< 32-bit float */
     epicsFloat64 f64;   /**< 64-bit float */
 } NDAttrValue;
+
+/** Struct defining the values in an NDAttribute vector object
+ * Ideally should be union, but union of nontrivial types does
+ * not exist in c++
+ */
+typedef struct {
+    std::vector<epicsInt8>    i8;    /**< Signed 8-bit integer */
+    std::vector<epicsUInt8>   ui8;   /**< Unsigned 8-bit integer */
+    std::vector<epicsInt16>   i16;   /**< Signed 16-bit integer */
+    std::vector<epicsUInt16>  ui16;  /**< Unsigned 16-bit integer */
+    std::vector<epicsInt32>   i32;   /**< Signed 32-bit integer */
+    std::vector<epicsUInt32>  ui32;  /**< Unsigned 32-bit integer */
+    std::vector<epicsInt64>   i64;   /**< Signed 64-bit integer */
+    std::vector<epicsUInt64>  ui64;  /**< Unsigned 64-bit integer */
+    std::vector<epicsFloat32> f32;   /**< 32-bit float */
+    std::vector<epicsFloat64> f64;   /**< 64-bit float */
+} NDAttrVecValue;
 
 /** Structure used by the EPICS ellLib library for linked lists of C++ objects.
   * This is needed for ellLists of C++ objects, for which making the first data element the ELLNODE
@@ -110,6 +138,26 @@ public:
     virtual int getValueInfo(NDAttrDataType_t *pDataType, size_t *pDataSize);
     virtual int getValue(NDAttrDataType_t dataType, void *pValue, size_t dataSize=0);
     virtual int getValue(std::string& value);
+    virtual int getValue(std::vector<epicsInt8>& value);
+    virtual int getValue(std::vector<epicsUInt8>& value);
+    virtual int getValue(std::vector<epicsInt16>& value);
+    virtual int getValue(std::vector<epicsUInt16>& value);
+    virtual int getValue(std::vector<epicsInt32>& value);
+    virtual int getValue(std::vector<epicsUInt32>& value);
+    virtual int getValue(std::vector<epicsInt64>& value);
+    virtual int getValue(std::vector<epicsUInt64>& value);
+    virtual int getValue(std::vector<epicsFloat32>& value);
+    virtual int getValue(std::vector<epicsFloat64>& value);
+    virtual int setValue(std::vector<epicsInt8>& value);
+    virtual int setValue(std::vector<epicsUInt8>& value);
+    virtual int setValue(std::vector<epicsInt16>& value);
+    virtual int setValue(std::vector<epicsUInt16>& value);
+    virtual int setValue(std::vector<epicsInt32>& value);
+    virtual int setValue(std::vector<epicsUInt32>& value);
+    virtual int setValue(std::vector<epicsInt64>& value);
+    virtual int setValue(std::vector<epicsUInt64>& value);
+    virtual int setValue(std::vector<epicsFloat32>& value);
+    virtual int setValue(std::vector<epicsFloat64>& value);
     virtual int setDataType(NDAttrDataType_t dataType);
     virtual int setValue(const void *pValue);
     virtual int setValue(const std::string&);
@@ -126,6 +174,7 @@ private:
     NDAttrDataType_t dataType_;     /**< Data type of attribute */
     NDAttrValue value_;             /**< Value of attribute except for strings */
     std::string string_;            /**< Value of attribute for strings */
+    NDAttrVecValue vector_;         /**< Value of attribute for vectors */
     std::string source_;            /**< Source string - EPICS PV name or DRV_INFO string */
     NDAttrSource_t sourceType_;     /**< Source type */
     std::string sourceTypeString_;  /**< Source type string */
